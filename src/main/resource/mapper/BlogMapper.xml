@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.myblog.dao.BlogMapper">
+
+
+    <resultMap id="BaseResultMap" type="com.myblog.model.Blog">
+        <id column="blogid" property="blogid" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="summary" property="summary" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="create_at" property="createAt" jdbcType="VARCHAR"/>
+        <result column="categoryid" property="categoryid" jdbcType="INTEGER"/>
+        <result column="hits" property="hits" jdbcType="INTEGER"/>
+        <result column="imageurl" property="imageurl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        blogid,title,summary,content,create_at,categoryid,hits,imageurl
+    </sql>
+
+    <select id="findAllBlog" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM blog
+        order by blogid DESC
+
+    </select>
+
+    <select id="getBanner" resultMap="BaseResultMap">
+        SELECT
+        blogid,title,imageurl
+        FROM blog
+        order by blogid desc
+        limit 5
+    </select>
+
+    <select id="getHits" resultMap="BaseResultMap">
+        SELECT blogid,title,create_at,hits,imageurl
+        FROM blog
+        WHERE date_sub(CURRENT(), INTERVAL 60 DAY ) &lt;= DATE (create_at )
+        ORDER by hits DESC
+        limit 5
+    </select>
+</mapper>
